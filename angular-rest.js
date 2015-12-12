@@ -1,5 +1,5 @@
-(function(){
-  'use strict';
+(function() {
+    'use strict';
 
     angular
         .module('ngRest', [])
@@ -9,9 +9,9 @@
             function($http, $q) {
 
                 /**
-                * @constructor
-                * @param - {String}
-                */
+                 * @constructor
+                 * @param - {String}
+                 */
                 function HttpService(url) {
 
                     var self = this;
@@ -19,10 +19,10 @@
                 }
 
                 /**
-                * @method
-                * @param - {object}
-                * @param (optional) - {object}
-                */
+                 * @method
+                 * @param - {object}
+                 * @param (optional) - {object}
+                 */
                 HttpService.prototype.save = function(data, config) {
 
                     var result = mergeConfigs({}, config);
@@ -34,9 +34,9 @@
                 };
 
                 /**
-                * @method
-                * @param (optional) - {object}
-                */
+                 * @method
+                 * @param (optional) - {object}
+                 */
                 HttpService.prototype.get = function(config) {
 
                     var result = mergeConfigs({}, config);
@@ -47,10 +47,10 @@
                 };
 
                 /**
-                * @method
-                * @param - {object}
-                * @param (optional) - {object}
-                */
+                 * @method
+                 * @param - {object}
+                 * @param (optional) - {object}
+                 */
                 HttpService.prototype.query = function(data, config) {
 
                     var result = mergeConfigs({}, config);
@@ -61,10 +61,10 @@
                 };
 
                 /**
-                * @method
-                * @param - {object}
-                * @param (optional) - {object}
-                */
+                 * @method
+                 * @param - {object}
+                 * @param (optional) - {object}
+                 */
                 HttpService.prototype.remove = function(data, config) {
 
                     var result = mergeConfigs({}, config);
@@ -75,11 +75,11 @@
                 };
 
                 /**
-                * @method
-                * @param - {object}
-                * @param - {object}
-                * @param (optional) - {object}
-                */
+                 * @method
+                 * @param - {object}
+                 * @param - {object}
+                 * @param (optional) - {object}
+                 */
                 HttpService.prototype.update = function(data, content, config) {
 
                     var result = mergeConfigs({}, config);
@@ -91,30 +91,30 @@
                 };
 
                 /**
-                * @method
-                * @param - String
-                */
+                 * @method
+                 * @param - String
+                 */
                 function restApi(url) {
 
-                  return new HttpService(url);
+                    return new HttpService(url);
                 }
 
                 /**
-                * @method
-                * @param - {object}
-                */
+                 * @method
+                 * @param - {object}
+                 */
                 function processRequest(config) {
 
                     var defer = $q.defer();
 
                     $http(config)
-                      .then(successCallback, errorCallback);
+                        .then(successCallback, errorCallback);
 
                     function successCallback(response) {
 
-                        if(response.status === 200 && typeof response.data !== undefined) {
+                        if (response.status === 200 && typeof response.data !== undefined) {
 
-                           defer.resolve(response.data);
+                            defer.resolve(response.data);
                         } else {
 
                             defer.reject(response.data);
@@ -130,13 +130,13 @@
                 }
 
                 /**
-                * @method
-                * @param - {object}
-                * @param - {object}
-                */
+                 * @method
+                 * @param - {object}
+                 * @param - {object}
+                 */
                 function mergeConfigs(dest, src) {
 
-                    if(typeof src === 'object') {
+                    if (typeof src === 'object') {
 
                         angular.merge(dest, config);
                     }
@@ -145,8 +145,8 @@
                 }
 
                 /**
-                * @return - {Function}
-                */
+                 * @return - {Function}
+                 */
                 return restApi;
             }
         ]);
