@@ -1,0 +1,27 @@
+{
+  "name": "angular-rest",
+  "version": "1.0.0",
+  "description": "Angular REST API for restfull calls",
+  "main": "angular-rest.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dastagirireddy/angular-rest.git"
+  },
+  "keywords": [
+    "angular",
+    "angular-rest",
+    "REST"
+  ],
+  "author": "DastagiriReddy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dastagirireddy/angular-rest/issues"
+  },
+  "homepage": "https://github.com/Dastagirireddy/angular-rest#readme",
+  "directories": {
+    "example": "example"
+  }
+}
