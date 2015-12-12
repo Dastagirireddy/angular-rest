@@ -6,6 +6,39 @@
 
 The idea is to demonstrate how to write a typical, non-trivial CRUD application using AngularJS with angular-rest.js API, NodeJs and MongoDb**. Most of Single Page Applications involve CRUD Operations. If you are building CRUD operations using Angular JS, then you can leverage the power of the $rest service. Built on the top of the $http service, Angular’s $rest is a factory that lets you interact with Restful backbend’s easily. So, let’s explore $rest and use it to implement CRUD operations in Angular.
 
+## How to use angular-rest
+
+* Add ngRest to main module
+
+  ```
+  angular.module('app', ['ngRest'])
+  ```
+
+* `$rest` factory will be available as a dependency injectable for all the angular services and controllers and directives as well.
+  
+  ```
+  angular.module('app').controller('RestAPIController', ['$scope', '$rest', function($scope, $rest){
+
+  }])
+  ```
+
+* Register REST API url by passing an argument to $rest method and return an object.
+  
+  ```
+  var restMethods = $rest('/api/contact')
+  ```
+
+* Returned object contains following methods
+  
+  ```
+  save - Submit form data 
+  get - retrieve all records from database
+  query - retrieve particular record based on ID
+  remove - remove particular record based on ID
+  update - update particular record based on ID
+  ```
+
+
 ## Stack
 
 * Persistence store: [MongoDB](http://www.mongodb.org/)
@@ -49,3 +82,4 @@ Our backend application server is a NodeJS application that relies upon some 3rd
       node server.js
       ```
   * Browse to the application at [http://localhost:5000]
+
