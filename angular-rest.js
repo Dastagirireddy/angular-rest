@@ -1,3 +1,7 @@
+/*
+ Angular-Rest v2.0.0
+ Open Source API for Angular JS
+*/
 (function() {
     'use strict';
 
