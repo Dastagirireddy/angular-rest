@@ -3,14 +3,65 @@
 
     angular
         .module('ngRest', [])
+        .service('RestAPIService', ['$http', '$q', function($http, $q){
+
+            var self = this;
+
+            /**
+             * @method
+             * @param {object} - userConfig
+             * @param {object} - defaults
+             * @returns {object} - final config object
+             */
+            self.getConfigObject = function(defaultConfig, userConfig) {
+
+                if (typeof userConfig === 'object') {
+
+                    return angular.merge({}, userConfig, defaultConfig);
+                } else {
+
+                    return defaultConfig;
+                }
+            };
+
+            /**
+             * @method
+             * @param {object} - config
+             * @returns {object} - Promise
+             */
+            self.send = function(config) {
+
+                var defer = $q.defer();
+
+                $http(config)
+                    .then(successCallback, errorCallback);
+
+                function successCallback(response) {
+
+                    if (response.status === 200 && typeof response.data !== undefined) {
+
+                        defer.resolve(response.data);
+                    } else {
+
+                        defer.reject(response.data);
+                    }
+                }
+
+                function errorCallback(error) {
+
+                    defer.reject(error);
+                }
+
+                return defer.promise;
+            };
+        }])
         .factory('$rest', [
-            '$http',
-            '$q',
-            function($http, $q) {
+            'RestAPIService',
+            function(RestAPIService) {
 
                 /**
                  * @constructor
-                 * @param - {String}
+                 * @param {String} - url
                  */
                 function HttpService(url) {
 
@@ -20,134 +71,100 @@
 
                 /**
                  * @method
-                 * @param - {object}
-                 * @param (optional) - {object}
+                 * @param {object} - data
+                 * @param {object} - config (optional)
+                 * @returns {object} 
                  */
                 HttpService.prototype.save = function(data, config) {
 
-                    var result = mergeConfigs({}, config);
-                    result.method = 'POST';
-                    result.url = this.url;
-                    result.data = data;
+                    var request = RestAPIService.getConfigObject({
+                        method: 'POST',
+                        url: this.url,
+                        data: data
+                    }, config);
 
-                    return processRequest(result);
+                    return RestAPIService.send(request);
                 };
 
                 /**
                  * @method
-                 * @param (optional) - {object}
+                 * @param {object} - config (optional)
+                 * @returns {object}
                  */
                 HttpService.prototype.get = function(config) {
 
-                    var result = mergeConfigs({}, config);
-                    result.method = 'GET';
-                    result.url = this.url;
+                    var request = RestAPIService.getConfigObject({
+                        method: 'GET',
+                        url: this.url
+                    }, config);
 
-                    return processRequest(result);
+                    return RestAPIService.send(request);
                 };
 
                 /**
                  * @method
-                 * @param - {object}
-                 * @param (optional) - {object}
+                 * @param {object} - data
+                 * @param {object} - config (optional)
+                 * @returns {object}
                  */
                 HttpService.prototype.query = function(data, config) {
 
-                    var result = mergeConfigs({}, config);
-                    result.method = 'GET';
-                    result.url = this.url + '/' + data.id;
+                    var request = RestAPIService.getConfigObject({
+                        method: 'GET',
+                        url: this.url + '/' + data.id
+                    }, config);
 
-                    return processRequest(result);
+                    return RestAPIService.send(request);
                 };
 
                 /**
                  * @method
-                 * @param - {object}
-                 * @param (optional) - {object}
+                 * @param {object} - data
+                 * @param {object} - config (optional)
+                 * @returns {object}
                  */
                 HttpService.prototype.remove = function(data, config) {
 
-                    var result = mergeConfigs({}, config);
-                    result.method = 'DELETE';
-                    result.url = this.url + '/' + data.id;
+                    var request = RestAPIService.getConfigObject(config, {
+                        method: 'DELETE',
+                        url: this.url + '/' + data.id
+                    });
 
-                    return processRequest(result);
+                    return RestAPIService.send(request);
                 };
 
                 /**
                  * @method
-                 * @param - {object}
-                 * @param - {object}
-                 * @param (optional) - {object}
+                 * @param {object} - data
+                 * @param {object} - content
+                 * @param {object} - config (optional)
+                 * @returns {object}
                  */
                 HttpService.prototype.update = function(data, content, config) {
 
-                    var result = mergeConfigs({}, config);
-                    result.method = 'PUT';
-                    result.url = this.url + '/' + data.id;
-                    result.data = content;
+                    var request = RestAPIService.getConfigObject({
+                        method: 'PUT',
+                        url: this.url + '/' + data.id,
+                        data: content
+                    }, config);
 
-                    return processRequest(result);
+                    return RestAPIService.send(request);
                 };
 
                 /**
                  * @method
-                 * @param - String
+                 * @param {string} - url
+                 * @returns {object} - Instance of HttpService
                  */
-                function restApi(url) {
+                var api = function(url) {
 
                     return new HttpService(url);
-                }
+                };
 
                 /**
-                 * @method
-                 * @param - {object}
+                 * @returns {Function}
                  */
-                function processRequest(config) {
-
-                    var defer = $q.defer();
-
-                    $http(config)
-                        .then(successCallback, errorCallback);
-
-                    function successCallback(response) {
-
-                        if (response.status === 200 && typeof response.data !== undefined) {
-
-                            defer.resolve(response.data);
-                        } else {
-
-                            defer.reject(response.data);
-                        }
-                    }
-
-                    function errorCallback(error) {
-
-                        defer.reject(error);
-                    }
-
-                    return defer.promise;
-                }
-
-                /**
-                 * @method
-                 * @param - {object}
-                 * @param - {object}
-                 */
-                function mergeConfigs(dest, src) {
-
-                    if (typeof src === 'object') {
-
-                        angular.merge(dest, config);
-                    }
-
-                    return dest;
-                }
-
-                /**
-                 * @return - {Function}
-                 */
-                return restApi;
+                return api;
             }
         ]);
 })();
