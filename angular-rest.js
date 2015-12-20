@@ -21,7 +21,7 @@
 
                 if (typeof userConfig === 'object') {
 
-                    return angular.merge({}, userConfig, defaultConfig);
+                    return angular.extend({}, userConfig, defaultConfig);
                 } else {
 
                     return defaultConfig;
@@ -129,10 +129,10 @@
                  */
                 HttpService.prototype.remove = function(data, config) {
 
-                    var request = RestAPIService.getConfigObject(config, {
+                    var request = RestAPIService.getConfigObject({
                         method: 'DELETE',
                         url: this.url + '/' + data.id
-                    });
+                    }, config);
 
                     return RestAPIService.send(request);
                 };
